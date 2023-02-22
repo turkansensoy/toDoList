@@ -7,13 +7,15 @@ namespace toDoList.Context
 {
     public class BaseDbContext: DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb; Database=TodoList;Trusted_Connection=true");
+        //}
+        public BaseDbContext(DbContextOptions options) : base(options)
         {
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb; Database=Northwind;Trusted_Connection=true");
+
         }
-        public DbSet<ThingstoDo> thingstoDo { get; set; }
-        public DbSet<BeingDone> beingDone { get; set; }
-        public DbSet<Done> done { get; set; }
+        public DbSet<ToDoList> toDoLists { get; set; }
 
     }
 }

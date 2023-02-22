@@ -3,14 +3,20 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using toDoList.Context;
 using toDoList.Data;
+using toDoList.Data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<BaseDbContext>
+    (options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("msSql")));
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
-
+//builder.Services.AddSingleton<ToDoListService>();
+builder.Services.AddTransient<IToDoListService, ToDoListService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,29 +1,49 @@
 ﻿@page "/"
-
+@using toDoList.Data.Models
+@inject toDoList.Data.Services.IToDoListService objToDoListService
 <PageTitle>Index</PageTitle>
 
 <h2>Yapılacaklar Listesi</h2>
 <br />
+
 <div class="row row-cols-1 row-cols-md-3 g-4">
     <div class="col">
         <div class="card h-100">
             <div class="card-header">Yapacaklarım</div>
-            <div class="card-body">
-               <form method="post" asp-controller="Home" asp-action="CreateHistogram">
-                    <input type="text" name="text">
-                    <input type="submit" value="Filter" />  
-               </form>
+            <div class="card-body">  
+                @*<EditForm Model="task" class="form-inline" OnInvalidSubmit="AddTask">
+                    <input type="text" @bind-value="task.TaskName" />
+                    <button class="btn btn-outline-primary mx-3">ekle</button>
+                </EditForm>*@
+                <input type="text" @bind="taskName" />
+                <button class="btn btn-outline-primary mx-3" @onclick="AddTask">ekle</button>
+
                 <div class="row my-5">
                     <div class="col">
                         <div class="table-responsive">
                             <table id="example" class="table table-striped" style="width:100%">
                                 <thead></thead>
                                 <tbody>
-                                    <tr>
-                                       <td>ajjjjjjjaaaa</td>
-                                        <td><a class="btn btn-success" onclick="UpdateEmployeeGetById()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a></td>
-                                        <td><a class="btn btn-danger" onclick="EmployeeDelete()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Sil</a></td>
-                                    </tr>
+                                  @foreach (var item in taskList)
+                                  {
+                                       if (item.IsBeingComplete)
+                                       {
+                                            <tr>
+                                                <td>@item.TaskName</td>
+                                                <td><a class="btn btn-success" href="todoUpdate/@item.Id" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a></td>
+                                                <td><a class="btn btn-danger" onclick="EmployeeDelete()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Sil</a></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@item.TaskName</td>
+                                                <td><a class="btn btn-success"  style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a></td>
+                                                <td><a class="btn btn-danger" onclick="EmployeeDelete()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Sil</a></td>
+                                            </tr>
+                                        }
+                                       
+                                    }
                                 </tbody>
                             </table>
                         </div>
@@ -32,15 +52,44 @@
             </div>
         </div>
     </div>
+
     <div class="col">
         <div class="card h-100">
             <div class="card-header">Yapıyorum</div>
             <div class="card-body">
-                <form method="post" asp-controller="Home" asp-action="CreateHistogram">
-                    <input type="text" name="text">
-                    <input type="submit" value="Filter" />
-                </form>
-                <br />
+                <input type="text" @bind="taskName" />
+                <button class="btn btn-outline-primary mx-3" @onclick="AddTask">ekle</button>
+                <div class="row my-5">
+                    <div class="col">
+                        <div class="table-responsive">
+                            <table id="example" class="table table-striped" style="width:100%">
+                                <thead></thead>
+                                <tbody>
+                                    @foreach (var item in taskList)
+                                    {
+                                        if (item.IsBeingComplete)
+                                        {
+                                            <tr>
+                                                <td>@item.TaskName</td>
+                                                <td><a class="btn btn-success" href="todoUpdate/@item.Id" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a></td>
+                                                <td><a class="btn btn-danger" onclick="EmployeeDelete()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Sil</a></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@item.TaskName</td>
+                                                <td><a class="btn btn-success" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a></td>
+                                                <td><a class="btn btn-danger" onclick="EmployeeDelete()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Sil</a></td>
+                                            </tr>
+                                        }
+
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -49,14 +98,69 @@
         <div class="card h-100">
             <div class="card-header">Yaptım</div>
             <div class="card-body">
-                <form method="post" asp-controller="Home" asp-action="CreateHistogram">
-                    <input type="text" name="text">
-                    <input type="submit" value="Filter" />
-                </form>
-                <br />
+                <input type="text" @bind="taskName" />
+                <button class="btn btn-outline-primary mx-3" @onclick="AddTask">ekle</button>
+                <div class="row my-5">
+                    <div class="col">
+                        <div class="table-responsive">
+                            <table id="example" class="table table-striped" style="width:100%">
+                                <thead></thead>
+                                <tbody>
+                                    @foreach (var item in taskList)
+                                    {
+                                        if (item.IsBeingComplete)
+                                        {
+                                            <tr>
+                                                <td>@item.TaskName</td>
+                                                <td><a class="btn btn-success" href="todoUpdate/@item.Id" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a></td>
+                                                <td><a class="btn btn-danger" onclick="EmployeeDelete()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Sil</a></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@item.TaskName</td>
+                                                <td><a class="btn btn-success" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a></td>
+                                                <td><a class="btn btn-danger" onclick="EmployeeDelete()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Sil</a></td>
+                                            </tr>
+                                        }
+
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 @*<SurveyPrompt Title="How is Blazor working for you?" />*@
+
+@code{
+
+    protected List<ToDoList> taskList= new();
+    protected override async Task OnInitializedAsync()
+    {
+        taskList = objToDoListService.GetAll();
+    }
+    private string taskName;
+
+    private void AddTask(){
+        if (!string.IsNullOrWhiteSpace(taskName))
+        {
+           
+            ToDoList toDo = new()
+                {
+                    TaskName = taskName,
+                    IsThingstoDoComplete = true,
+                    IsBeingComplete = false,
+                    IsDoneComplete = false,
+                };
+            objToDoListService.Add(toDo);
+            taskList.Add(toDo);
+            taskName = string.Empty;
+        }
+    }
+}
 
