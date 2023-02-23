@@ -1,7 +1,31 @@
 ﻿@page "/todoUpdate/{id}"
-<h3>@Id</h3>
+@inject toDoList.Data.Services.IToDoListService objToDoListService
+@inject NavigationManager NavigatonManager
 
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <input type="text" @bind="objToDo.TaskName" />
+                <button class="btn btn-outline-primary mx-3" @onclick="UpdateTask">ekle</button>
+            </div>
+        </div>
+    </div>
+</form>
 @code {
     [Parameter]
-    public string Id{ get; set;}
+    public string id { get; set; }
+    ToDoList objToDo = new();
+    protected override async Task OnInitializedAsync()
+    {
+        objToDo = await Task.Run(() => objToDoListService.GetById(Convert.ToInt32(id)));
+    }
+
+    public void UpdateTask()
+    {
+        objToDoListService.Update(objToDo);
+        NavigatonManager.NavigateTo("/", forceLoad: true);
+
+    }
+
 }

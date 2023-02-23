@@ -9,147 +9,121 @@
 <div class="row row-cols-1 row-cols-md-3 g-4">
     <div class="col">
         <div class="card h-100">
-            <div class="card-header">Yapacaklarım</div>
-            <div class="card-body">  
-                @*<EditForm Model="task" class="form-inline" OnInvalidSubmit="AddTask">
-                    <input type="text" @bind-value="task.TaskName" />
-                    <button class="btn btn-outline-primary mx-3">ekle</button>
-                </EditForm>*@
+            <div class="card-header" style="font-size:20px">Yapacaklarım</div>
+            <div class="card-body">
                 <input type="text" @bind="taskName" />
                 <button class="btn btn-outline-primary mx-3" @onclick="AddTask">ekle</button>
 
-                <div class="row my-5">
-                    <div class="col">
-                        <div class="table-responsive">
-                            <table id="example" class="table table-striped" style="width:100%">
-                                <thead></thead>
-                                <tbody>
-                                  @foreach (var item in taskList)
-                                  {
-                                       if (item.IsBeingComplete)
-                                       {
-                                            <tr>
-                                                <td>@item.TaskName</td>
-                                                <td><a class="btn btn-success" href="todoUpdate/@item.Id" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a></td>
-                                                <td><a class="btn btn-danger" onclick="EmployeeDelete()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Sil</a></td>
-                                            </tr>
-                                        }
-                                        else
-                                        {
-                                            <tr>
-                                                <td>@item.TaskName</td>
-                                                <td><a class="btn btn-success"  style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a></td>
-                                                <td><a class="btn btn-danger" onclick="EmployeeDelete()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Sil</a></td>
-                                            </tr>
-                                        }
-                                       
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                <ul class="list-group my-2">
+                    @foreach (var item in objToDoListService.GetAll())
+                    {
+                        if (item.IsThingstoDoComplete)
+                        {
+                            <li class="list-group-item list-group-item-success mx-2">
+                            <li class="list-group-item ">@item.TaskName</li>
+                            <a class="btn btn-primary btn-sm" href="todoUpdate/@item.Id" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a>
+                            <a class="btn btn-info btn-sm" @onclick="()=>ThingsControlTask(item)" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Yapıyorum</a>
+                            <a class="btn btn-secondary btn-sm" @onclick="()=>DoneCompleteControlTask(item)" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Yaptım</a>
+
+                            </li>
+                        }
+                        @* else
+                    {
+                    <li class="list-group-item list-group-item-success mx-2">
+                    <li class="list-group-item " @onclick="(()=>item.IsThingstoDoComplete=!item.IsThingstoDoComplete)"><del>@item.TaskName</del></li>
+                    </li>
+                    }*@
+
+                    }
+                </ul>
+
+
+
             </div>
         </div>
     </div>
 
     <div class="col">
         <div class="card h-100">
-            <div class="card-header">Yapıyorum</div>
+            <div class="card-header" style="font-size:20px">Yapıyorum</div>
             <div class="card-body">
-                <input type="text" @bind="taskName" />
-                <button class="btn btn-outline-primary mx-3" @onclick="AddTask">ekle</button>
-                <div class="row my-5">
-                    <div class="col">
-                        <div class="table-responsive">
-                            <table id="example" class="table table-striped" style="width:100%">
-                                <thead></thead>
-                                <tbody>
-                                    @foreach (var item in taskList)
-                                    {
-                                        if (item.IsBeingComplete)
-                                        {
-                                            <tr>
-                                                <td>@item.TaskName</td>
-                                                <td><a class="btn btn-success" href="todoUpdate/@item.Id" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a></td>
-                                                <td><a class="btn btn-danger" onclick="EmployeeDelete()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Sil</a></td>
-                                            </tr>
-                                        }
-                                        else
-                                        {
-                                            <tr>
-                                                <td>@item.TaskName</td>
-                                                <td><a class="btn btn-success" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a></td>
-                                                <td><a class="btn btn-danger" onclick="EmployeeDelete()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Sil</a></td>
-                                            </tr>
-                                        }
+                <input type="text" @bind="taskName2" />
+                <button class="btn btn-outline-primary mx-3" @onclick="AddBeingTask">ekle</button>
+                <ul class="list-group my-2">
+                    @foreach (var item in objToDoListService.GetAll())
+                    {
+                        if (item.IsBeingComplete)
+                        {
+                            <li class="list-group-item list-group-item-success mx-2">
+                            <li class="list-group-item ">@item.TaskName</li>
+                            <a class="btn btn-primary btn-sm" href="todoUpdate/@item.Id" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a>
+                            <a class="btn btn-info btn-sm" @onclick="()=>DoneCompleteControlTask(item)" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Yaptım</a>
 
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                            </li>
+                        }
+                        @*
+                    else
+                    {
+                    <li class="list-group-item list-group-item-success mx-2">
+                    <li class="list-group-item " @onclick="(()=>item.IsBeingComplete=!item.IsBeingComplete)"><del>@item.TaskName</del></li>
+                    </li>
+                    }*@
+
+                    }
+                </ul>
 
             </div>
         </div>
     </div>
+
     <div class="col">
         <div class="card h-100">
-            <div class="card-header">Yaptım</div>
+            <div class="card-header" style="font-size:20px">Yaptım</div>
             <div class="card-body">
-                <input type="text" @bind="taskName" />
-                <button class="btn btn-outline-primary mx-3" @onclick="AddTask">ekle</button>
-                <div class="row my-5">
-                    <div class="col">
-                        <div class="table-responsive">
-                            <table id="example" class="table table-striped" style="width:100%">
-                                <thead></thead>
-                                <tbody>
-                                    @foreach (var item in taskList)
-                                    {
-                                        if (item.IsBeingComplete)
-                                        {
-                                            <tr>
-                                                <td>@item.TaskName</td>
-                                                <td><a class="btn btn-success" href="todoUpdate/@item.Id" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a></td>
-                                                <td><a class="btn btn-danger" onclick="EmployeeDelete()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Sil</a></td>
-                                            </tr>
-                                        }
-                                        else
-                                        {
-                                            <tr>
-                                                <td>@item.TaskName</td>
-                                                <td><a class="btn btn-success" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a></td>
-                                                <td><a class="btn btn-danger" onclick="EmployeeDelete()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Sil</a></td>
-                                            </tr>
-                                        }
+                <input type="text" @bind="taskName3" />
+                <button class="btn btn-outline-primary mx-3" @onclick="AddDoneTask">ekle</button>
+                <ul class="list-group my-2">
+                    @foreach (var item in objToDoListService.GetAll())
+                    {
+                        if (item.IsDoneComplete)
+                        {
+                            <li class="list-group-item list-group-item-success mx-2">
+                            <li class="list-group-item ">@item.TaskName</li>
+                            <a class="btn btn-primary btn-sm" href="todoUpdate/@item.Id" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Güncelle</a>
+                            </li>
+                        }
 
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                        @* else
+                    {
+                    <li class="list-group-item list-group-item-success mx-2">
+                    <li class="list-group-item " @onclick="(()=>item.IsDoneComplete=!item.IsDoneComplete)"><del>@item.TaskName</del></li>
+                    </li>
+                    }*@
+
+                    }
+                </ul>
             </div>
         </div>
     </div>
 </div>
 @*<SurveyPrompt Title="How is Blazor working for you?" />*@
 
-@code{
+@code {
 
-    protected List<ToDoList> taskList= new();
     protected override async Task OnInitializedAsync()
     {
-        taskList = objToDoListService.GetAll();
+        objToDoListService.GetAll();
     }
     private string taskName;
+    private string taskName2;
+    private string taskName3;
 
-    private void AddTask(){
+    // Add Things to Do
+    private void AddTask()
+    {
         if (!string.IsNullOrWhiteSpace(taskName))
         {
-           
+
             ToDoList toDo = new()
                 {
                     TaskName = taskName,
@@ -158,9 +132,65 @@
                     IsDoneComplete = false,
                 };
             objToDoListService.Add(toDo);
-            taskList.Add(toDo);
+
             taskName = string.Empty;
         }
     }
+
+    public void AddBeingTask()
+    {
+        if (!string.IsNullOrWhiteSpace(taskName2))
+        {
+
+            ToDoList toDo = new()
+                {
+                    TaskName = taskName2,
+                    IsThingstoDoComplete = false,
+                    IsBeingComplete = true,
+                    IsDoneComplete = false,
+                };
+            objToDoListService.Add(toDo);
+            taskName2 = string.Empty;
+        }
+    }
+
+    public void AddDoneTask()
+    {
+        if (!string.IsNullOrWhiteSpace(taskName3))
+        {
+
+            ToDoList toDo = new()
+                {
+                    TaskName = taskName3,
+                    IsThingstoDoComplete = false,
+                    IsBeingComplete = false,
+                    IsDoneComplete = true,
+                };
+            objToDoListService.Add(toDo);
+            taskName3 = string.Empty;
+        }
+    }
+
+    public void ThingsControlTask(ToDoList toDo)
+    {
+
+        ToDoList toDo1 = new();
+        toDo1 = objToDoListService.GetById(Convert.ToInt32(toDo.Id));
+        toDo1.IsThingstoDoComplete = false;
+        toDo1.IsBeingComplete = true;
+        objToDoListService.Update(toDo1);
+    }
+    public void DoneCompleteControlTask(ToDoList toDo)
+    {
+
+        ToDoList toDo1 = new();
+        toDo1 = objToDoListService.GetById(Convert.ToInt32(toDo.Id));
+        toDo1.IsThingstoDoComplete = false;
+        toDo1.IsBeingComplete = false;
+        toDo1.IsDoneComplete = true;
+        objToDoListService.Update(toDo1);
+    }
+
+
 }
 
